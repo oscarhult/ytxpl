@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        padding: 0;
+        margin: 0;
+        background-color: black;
+      }
+      .container {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        width: 100%;
+      }
+      video {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <video controls autoplay muted id="player" type="video/mp4"></video>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          if (window.location.search) {
+            let search = new URLSearchParams(window.location.search);
+            let videoId = search.get("v");
+            if (videoId) {
+              fetch(`api/youtube/video/${videoId}`)
+                .then((res) => res.json())
+                .then((json) => {
+                  if (json.success) {
+                    document.getElementById("player").src = json.url;
+                    document.title = `${json.channelTitle}: ${json.title}`;
+                  }
+                });
+            }
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>
