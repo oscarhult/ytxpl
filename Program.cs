@@ -10,6 +10,7 @@ WebHost
   .ConfigureServices(x =>
   {
     x.AddSingleton<YoutubeClient>();
+    x.AddMemoryCache();
     x.AddControllers();
   })
   .Configure(x =>
