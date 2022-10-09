@@ -15,15 +15,54 @@
         height: 100%;
         width: 100%;
       }
-      video {
+      #player {
         width: 100%;
         height: auto;
+        display: none;
+      }
+      #search {
+        width: 100%;
+        line-height: 150%;
+        text-align: center;
+        outline: none;
+        border: none;
+        font-size: 30pt;
+        display: none;
       }
     </style>
+    <script>
+      function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            func.apply(this, args);
+          }, timeout);
+        };
+      }
+      function parseId(sender) {
+        let { value } = sender;
+        fetch(`api/youtube/parse`, {
+          method: "POST",
+          body: JSON.stringify({ value }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((json) => {
+            if (json.success) {
+              window.location.href = "/?v=" + json.id;
+            }
+          });
+      }
+      const processChange = debounce((sender) => parseId(sender));
+    </script>
   </head>
   <body>
     <div class="container">
       <video controls autoplay muted id="player" type="video/mp4"></video>
+      <input type="text" id="search" onkeyup="processChange(this)" />
       <script>
         document.addEventListener("DOMContentLoaded", function () {
           if (window.location.search) {
@@ -34,11 +73,25 @@
                 .then((res) => res.json())
                 .then((json) => {
                   if (json.success) {
-                    document.getElementById("player").src = json.url;
+                    let player = document.getElementById("player");
+                    player.src = json.url;
+                    player.style.display = "block";
                     document.title = `${json.channelTitle}: ${json.title}`;
+                  } else {
+                    let search = document.getElementById("search");
+                    search.style.display = "block";
+                    search.focus();
                   }
                 });
+            } else {
+              let search = document.getElementById("search");
+              search.style.display = "block";
+              search.focus();
             }
+          } else {
+            let search = document.getElementById("search");
+            search.style.display = "block";
+            search.focus();
           }
         });
       </script>
