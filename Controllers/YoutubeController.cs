@@ -51,4 +51,31 @@ public class YoutubeController : ControllerBase
       });
     }
   }
+
+  public class ParseRequest
+  {
+    public string Value { get; set; }
+  }
+
+  [HttpPost("parse")]
+  public ActionResult GetParse(ParseRequest req)
+  {
+    try
+    {
+      var videoId = VideoId.Parse(req.Value);
+      return Ok(new
+      {
+        Success = true,
+        Id = videoId.Value
+      });
+    }
+    catch
+    {
+      return Ok(new
+      {
+        Success = false,
+        Error = "No Id Found"
+      });
+    }
+  }
 }
