@@ -62,7 +62,12 @@
   <body>
     <div class="container">
       <video controls autoplay muted id="player" type="video/mp4"></video>
-      <input type="text" id="search" onkeyup="processChange(this)" />
+      <input
+        type="text"
+        id="search"
+        onchange="processChange(this)"
+        oninput="processChange(this)"
+      />
       <script>
         document.addEventListener("DOMContentLoaded", function () {
           if (window.location.search) {
