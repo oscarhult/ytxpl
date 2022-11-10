@@ -1,14 +1,25 @@
 ```
 docker run \
   --rm \
-  -p 80:80 \
+  --publish 80:80/tcp \
   ghcr.io/oscarhult/ytxpl
 ```
 
 ```
 docker run \
   --rm \
-  -e ASPNETCORE_URLS="http://+:5555" \
-  -p 5555:5555 \
+  --env ASPNETCORE_URLS="http://+:5555" \
+  --publish 5555:5555/tcp \
+  ghcr.io/oscarhult/ytxpl
+```
+
+```
+docker run \
+  --rm \
+  --read-only \
+  --env TZ="Europe/Stockholm" \
+  --env DOTNET_EnableDiagnostics="0" \
+  --env ASPNETCORE_URLS="http://+:5555" \
+  --publish 5555:5555/tcp \
   ghcr.io/oscarhult/ytxpl
 ```
