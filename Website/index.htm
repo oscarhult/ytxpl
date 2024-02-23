@@ -1,13 +1,20 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <title>&blacktriangleright;</title>
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <style type="text/css">
+      html,
       body {
         padding: 0;
         margin: 0;
         background-color: black;
+        height: 100%;
+        width: 100%;
       }
       .container {
         display: grid;
@@ -16,9 +23,9 @@
         width: 100%;
       }
       #player {
-        width: 100%;
-        height: auto;
         display: none;
+        min-width: 100%;
+        min-height: 100%;
       }
       #search {
         width: 100%;
@@ -61,7 +68,18 @@
   </head>
   <body>
     <div class="container">
-      <video controls autoplay muted id="player" type="video/mp4"></video>
+      <video
+        id="player"
+        class="video-js"
+        controls
+        autoplay
+        muted
+        preload="auto"
+        width="640"
+        height="360"
+        type="video/mp4"
+        data-setup="{}"
+      ></video>
       <input
         type="text"
         id="search"
@@ -78,9 +96,13 @@
                 .then((res) => res.json())
                 .then((json) => {
                   if (json.success) {
-                    let player = document.getElementById("player");
-                    player.src = json.url;
-                    player.style.display = "block";
+                    let el = document.getElementById("player");
+                    el.style.display = "block";
+                    let player = videojs("player");
+                    player.src({
+                      type: "video/mp4",
+                      src: json.url,
+                    });
                     document.title = `${json.channelTitle}: ${json.title}`;
                   } else {
                     let search = document.getElementById("search");
@@ -101,5 +123,6 @@
         });
       </script>
     </div>
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
   </body>
 </html>
